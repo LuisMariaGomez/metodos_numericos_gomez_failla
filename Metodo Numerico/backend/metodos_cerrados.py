@@ -14,9 +14,11 @@ metodo = 'regla_falsa'
 
 funcion = sympify(expr_str)
 x3_anterior = 0
+
 x1_evaluada = 0
 x2_evaluada = 0
 x3_evaluada = 0
+
 error = 0
 
 # Funciones
@@ -27,18 +29,10 @@ def evaluar_funcion_en_x(x):
 def calcular_x3_biseccion(x1, x2):
     global x3
     x3 = (x1 + x2)/2
-    # if(x1_evaluada*x3_evaluada < 0):
-    #     x3 = x2
-    # else:
-    #     x3 = x1
 
 def calcular_x3_regla_falsa(x1, x2):
     global x3
     x3 = (evaluar_funcion_en_x(x2) * x1 - evaluar_funcion_en_x(x1) * x2) / (evaluar_funcion_en_x(x2) - evaluar_funcion_en_x(x1))
-    # if(x1_evaluada*x3_evaluada < 0):
-    #     x3 = x2
-    # else:
-    #     x3 = x1
 
 
 x1_evaluada, x2_evaluada = evaluar_funcion_en_x(x1), evaluar_funcion_en_x(x2)
