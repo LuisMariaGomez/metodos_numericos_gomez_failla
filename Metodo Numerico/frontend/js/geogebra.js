@@ -6,7 +6,8 @@ function crearApplet(){
         width: 600,
         height: 400,
         showToolBar: false,
-        showAlgebraInput: false
+        showAlgebraInput: false,
+        showMenuBar: false
     };
 
     applet = new GGBApplet(params, true);
