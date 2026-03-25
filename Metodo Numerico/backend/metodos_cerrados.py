@@ -1,75 +1,75 @@
-from sympy import sympify, sin
-import sys
+from sympy import sympify
 
-# Parametros ingresados
+"""Métodos cerrados: Bisección y Regla Falsa"""
 
-expr_str = '3*x - 4'
-iteraciones = 100
-toleracia = 0.001
-x1 = 100
-x2 = 100
-metodo = 'regla_falsa'
+def resolver_cerrados(expr_str, x1, x2, iteraciones, tolerancia, metodo):
+    funcion = sympify(expr_str)
 
-# Variables internas
+    def f(v):
+        return float(funcion.subs('x', v).evalf())
+    
+    # Evaluaciones iniciales
+    fx1 = f(x1)
+    fx2 = f(x2)
 
-funcion = sympify(expr_str)
-x3_anterior = 0
+    # Validación del intervalo
+    if fx1 * fx2 > 0:
+        return {"error": "La raíz NO está en el intervalo (x1*f(x1) y x2*f(x2) tienen igual signo)"}
 
-x1_evaluada = 0
-x2_evaluada = 0
-x3_evaluada = 0
+    if fx1 == 0:
+        return {"raiz": x1, "mensaje": "x1 es raíz exacta"}
 
-error = 0
+    if fx2 == 0:
+        return {"raiz": x2, "mensaje": "x2 es raíz exacta"}
 
-# Funciones
-def evaluar_funcion_en_x(x):
-    print(f'evaluamos en {x}, da {funcion.subs("x", x).evalf()}')
-    return(funcion.subs('x', x).evalf())
+    x3_anterior = 0
 
-def calcular_x3_biseccion(x1, x2):
-    global x3
-    x3 = (x1 + x2)/2
+    for i in range(iteraciones):
 
-def calcular_x3_regla_falsa(x1, x2):
-    global x3
-    x3 = (evaluar_funcion_en_x(x2) * x1 - evaluar_funcion_en_x(x1) * x2) / (evaluar_funcion_en_x(x2) - evaluar_funcion_en_x(x1))
+        # Cálculo de x3
+        if metodo == "biseccion":
+            x3 = (x1 + x2) / 2
 
+        elif metodo == "regla_falsa":
+            fx1 = f(x1)
+            fx2 = f(x2)
 
-x1_evaluada, x2_evaluada = evaluar_funcion_en_x(x1), evaluar_funcion_en_x(x2)
-print('Fin evaluacion principal')
-if(x1_evaluada*x2_evaluada > 0):
-    print('la raiz no esta en el rango chau')
-    sys.exit()
-elif(x1_evaluada*x2_evaluada == 0):
-    if(x1_evaluada):
-        print(f'la raiz es {x1}')
-    else:
-        print(f'la raiz es {x2}')
-    sys.exit()
-else:
-    for x in range(iteraciones):
-        print('\n')
-        print(f'iteracion {x}')
-        if(metodo == 'biseccion'):
-            print(f'calculamos x3 con biseccion')
-            calcular_x3_biseccion(x1, x2)
+            if fx2 - fx1 == 0:
+                return {"error": "División por cero en Regla Falsa"}
+
+            x3 = (fx2 * x1 - fx1 * x2) / (fx2 - fx1)
+
         else:
-            calcular_x3_regla_falsa(x1, x2)
+            return {"error": "Método inválido. Usa 'biseccion' o 'regla_falsa'."}
 
-        print(f'x3 = {x3}')
-        x3_evaluada = evaluar_funcion_en_x(x3)
-        error = abs((x3 - x3_anterior)/ x3)
-        print(f'error = {error}')
+        fx3 = f(x3)
 
-        if( abs(x3_evaluada) < toleracia or error < toleracia):
-            print(f'{x3} es raiz')
-            sys.exit()
+        # Error
+        if x3 == 0:
+            return {"error": "x3 = 0 genera división en error"}
+
+        error = abs((x3 - x3_anterior) / x3)
+
+        if abs(fx3) < tolerancia or error < tolerancia:
+            return {
+                "raiz": x3,
+                "iteracion": i,
+                "error": error
+            }
+
+        # Actualizar intervalo
+        if fx1 * fx3 < 0:
+            x2 = x3
+            fx2 = fx3
         else:
-            print(f'no es raiz, actualizamos valores')
-            if(x1_evaluada*x3_evaluada < 0):
-                x2 = x3
-            else:
-                x1 = x3
+            x1 = x3
+            fx1 = fx3
+
         x3_anterior = x3
-        print(f'valores actualizados {x1}, {x2}, {x3}')
-    print(f'{x3} es la raiz, me quede sin iteraciones')
+
+    # Alcanzo límite
+    return {
+        "raiz": x3,
+        "mensaje": "Se alcanzó el máximo de iteraciones",
+        "error": error
+    }
