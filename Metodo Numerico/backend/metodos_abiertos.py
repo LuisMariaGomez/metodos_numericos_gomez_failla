@@ -17,22 +17,19 @@ def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
     x3_anterior = 0
 
     # Evaluaciones iniciales
-    x1_eval = f(x1)
-    x2_eval = f(x2)
+    fx1 = f(x1)
+    fx2 = f(x2)
 
-    if abs(x1_eval) < tolerancia:
+    if abs(fx1) < tolerancia:
         return {"raiz": x1}
 
-    if metodo == "secante" and abs(x2_eval) < tolerancia:
+    if metodo == "secante" and abs(fx2) < tolerancia:
         return {"raiz": x2}
     
     #iteraciones
     for i in range(iteraciones):
 
         if metodo == "secante":
-            fx1 = f(x1)
-            fx2 = f(x2)
-
             if fx2 - fx1 == 0:
                 return {"error": "División por cero"}
 

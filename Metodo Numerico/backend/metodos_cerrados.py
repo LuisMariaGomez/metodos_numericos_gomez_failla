@@ -14,7 +14,7 @@ def resolver_cerrados(expr_str, x1, x2, iteraciones, tolerancia, metodo):
 
     # Validación del intervalo
     if fx1 * fx2 > 0:
-        return {"error": "La raíz NO está en el intervalo (x1*f(x1) y x2*f(x2) tienen igual signo)"}
+        return {"error": "La raíz NO está en el intervalo tienen igual signo)"}
 
     if fx1 == 0:
         return {"raiz": x1, "mensaje": "x1 es raíz exacta"}
