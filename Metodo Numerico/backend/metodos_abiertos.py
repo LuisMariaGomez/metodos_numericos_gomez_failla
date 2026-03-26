@@ -51,7 +51,7 @@ def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
         error = abs((x3 - x3_anterior) / x3)
 
         if abs(f(x3)) < tolerancia or error < tolerancia:
-            return {"raiz": x3, "iteración": i}
+            return {"raiz": x3, "iteración": i, "error": error}
 
         # Actualizar valores
         if metodo == "secante":
