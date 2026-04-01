@@ -7,10 +7,11 @@
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta charset="utf-8"/>
     </head>
+
 <body>
     <nav>
         <ul>
-            <li><a href="/metodos_abiertos">Unidad 1</a></li>
+            <li><a href="/metodos_abiertos"><h1>Métodos Numéricos</h1></a></li>
         </ul>
     </nav>
     <section class="pantalla_principal">
@@ -18,27 +19,50 @@
 
             <h2>Parámetros</h2>
 
-            <label>Función</label>
-            <input id="expr_str" value="3*x - 4">
+            <label>Función f(x)</label>
+            <input id="expr_str" placeholder="ej: 3*x - 4">
 
             <label>Iteraciones</label>
             <input id="iteraciones" type="number" value="100">
 
             <label>Tolerancia</label>
-            <input id="tolerancia" value="0.001">
+            <input id="tolerancia" value="0.0001">
 
             <label>x1</label>
-            <input id="x1" value="100">
+            <input id="x1" placeholder="ej: 100">
 
             <label>x2</label>
-            <input id="x2" value="0">
-
-            <button onclick="graficar()">Graficar</button>
-         </div>
+            <input id="x2" placeholder="ej: 0">
+             
+           <div class="button-grid"> 
+                      <div class="metodos-grid">
+                        <button class="metodo-btn" onclick="seleccionarMetodo('secante')">
+                            🔵 Secante (Abierto)
+                        </button>
+                        <button class="metodo-btn" onclick="seleccionarMetodo('tangente')">
+                            🟣 Tangente / Newton (Abierto)
+                        </button>
+                        <button class="metodo-btn" onclick="seleccionarMetodo('biseccion')">
+                            🟢 Bisección (Cerrado)
+                        </button>
+                        <button class="metodo-btn" onclick="seleccionarMetodo('regla_falsa')">
+                            🟠 Regla Falsa (Cerrado)
+                        </button>
+                      </div>
+                      <button id="graficar-btn" onclick="graficar()">Graficar</button>
+            </div>
+        </div>
         <div id="grafico"></div>
-        <div class="resultados"></div>
+        <div class="resultados">
+            <h2>Resultados</h2>
+            <label>Iteraciones</label>
+            <span id="iteraciones" class="result-value"></span>
+            <label>Raíz</label>
+            <span id="raiz" class="result-value"></span>
+            <label>Error</label>
+            <span id="error" class="result-value"></span>
+        </div>
     </section>
-
 
     <script src="https://www.geogebra.org/apps/deployggb.js"></script>
     <script src="./js/geogebra.js"></script>
