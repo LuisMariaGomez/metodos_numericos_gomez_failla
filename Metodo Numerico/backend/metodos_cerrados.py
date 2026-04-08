@@ -1,63 +1,61 @@
-from sympy import sympify
-
-"""Métodos cerrados: Bisección y Regla Falsa"""
+from sympy import symbols
+from sympy.parsing.sympy_parser import (
+    parse_expr,
+    standard_transformations,
+    implicit_multiplication_application
+)
 
 def resolver_cerrados(expr_str, x1, x2, iteraciones, tolerancia, metodo):
-    funcion = sympify(expr_str)
+
+    transformations = standard_transformations + (implicit_multiplication_application,)
+    expr_str = expr_str.replace("^", "**")
+
+    x = symbols('x')
+    funcion = parse_expr(expr_str, transformations=transformations, local_dict={'x': x})
 
     def f(v):
-        return float(funcion.subs('x', v).evalf())
-    
-    # Evaluaciones iniciales
+        return float(funcion.subs(x, v).evalf())
+
     fx1 = f(x1)
     fx2 = f(x2)
 
-    # Validación del intervalo
     if fx1 * fx2 > 0:
-        return {"error": "La raíz NO está en el intervalo tienen igual signo)"}
+        return {"raiz": None, "iteracion": None, "error": "Intervalo inválido"}
 
     if fx1 == 0:
-        return {"raiz": x1, "mensaje": "x1 es raíz exacta"}
+        return {"raiz": x1, "iteracion": 0, "error": 0}
 
     if fx2 == 0:
-        return {"raiz": x2, "mensaje": "x2 es raíz exacta"}
+        return {"raiz": x2, "iteracion": 0, "error": 0}
 
     x3_anterior = 0
+    x3 = x1
+    error = 0
 
     for i in range(iteraciones):
 
-        # Cálculo de x3
         if metodo == "biseccion":
             x3 = (x1 + x2) / 2
 
         elif metodo == "regla_falsa":
-            fx1 = f(x1)
-            fx2 = f(x2)
-
             if fx2 - fx1 == 0:
-                return {"error": "División por cero en Regla Falsa"}
+                return {"raiz": None, "iteracion": None, "error": "División por cero"}
 
             x3 = (fx2 * x1 - fx1 * x2) / (fx2 - fx1)
 
         else:
-            return {"error": "Método inválido. Usa 'biseccion' o 'regla_falsa'."}
+            return {"raiz": None, "iteracion": None, "error": "Método inválido"}
 
         fx3 = f(x3)
 
-        # Error
         if x3 == 0:
-            return {"error": "x3 = 0 genera división en error"}
-
-        error = abs((x3 - x3_anterior) / x3)
+            error = abs(x3 - x3_anterior)
+        else:
+            error = abs((x3 - x3_anterior) / x3)
 
         if abs(fx3) < tolerancia or error < tolerancia:
-            return {
-                "raiz": x3,
-                "iteracion": i,
-                "error": error
-            }
+            return {"raiz": x3, "iteracion": i, "error": error}
 
-        # Actualizar intervalo
         if fx1 * fx3 < 0:
             x2 = x3
             fx2 = fx3
@@ -67,9 +65,4 @@ def resolver_cerrados(expr_str, x1, x2, iteraciones, tolerancia, metodo):
 
         x3_anterior = x3
 
-    # Alcanzo límite
-    return {
-        "raiz": x3,
-        "mensaje": "Se alcanzó el máximo de iteraciones",
-        "error": error
-    }
+    return {"raiz": x3, "iteracion": iteraciones, "error": error}
