@@ -50,4 +50,5 @@ def resolver_cerrados_api(
     tolerancia: float,
     metodo: str   # "biseccion" o "regla_falsa"
 ):
-    return resolver_cerrados(expr, x1, x2, iteraciones, tolerancia, metodo)
+    resultado = resolver_cerrados(expr, x1, x2, iteraciones, tolerancia, metodo)
+    return resultado

@@ -36,16 +36,16 @@
              
            <div class="button-grid"> 
                       <div class="metodos-grid">
-                        <button class="metodo-btn" onclick="seleccionarMetodo('secante')">
+                        <button class="metodo-btn" onclick="seleccionarMetodo('secante', this)">
                             🔵 Secante (Abierto)
                         </button>
-                        <button class="metodo-btn" onclick="seleccionarMetodo('tangente')">
+                        <button class="metodo-btn" onclick="seleccionarMetodo('tangente', this)">
                             🟣 Tangente / Newton (Abierto)
                         </button>
-                        <button class="metodo-btn" onclick="seleccionarMetodo('biseccion')">
+                        <button class="metodo-btn" onclick="seleccionarMetodo('biseccion', this)">
                             🟢 Bisección (Cerrado)
                         </button>
-                        <button class="metodo-btn" onclick="seleccionarMetodo('regla_falsa')">
+                        <button class="metodo-btn" onclick="seleccionarMetodo('regla_falsa', this)">
                             🟠 Regla Falsa (Cerrado)
                         </button>
                       </div>

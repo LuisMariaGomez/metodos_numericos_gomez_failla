@@ -1,8 +1,13 @@
 let metodoSeleccionado = '';
 let applet;
 
-function seleccionarMetodo(metodo) {
+function seleccionarMetodo(metodo, boton) {
     metodoSeleccionado = metodo;
+    const botones = document.querySelectorAll('.metodo-btn');
+    botones.forEach(b => b.classList.remove('selected'));
+    if (boton) {
+        boton.classList.add('selected');
+    }
 }
 
 function init() {
