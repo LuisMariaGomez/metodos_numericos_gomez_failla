@@ -1,74 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Métodos Numericos 2026</title>
-        <link rel="stylesheet" href="styles/styles.css">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta charset="utf-8"/>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Numerico | Inicio</title>
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body class="home-body">
 
-<body>
-    <nav>
-        <ul>
-            <li><a href="/metodos_abiertos"><h1>Métodos Numéricos</h1></a></li>
-        </ul>
-    </nav>
-    <section class="pantalla_principal">
-        <div class="card">
+    <main class="home-layout">
+        <section class="home-hero">
+            <p class="home-badge">Analisis Numerico 2026</p>
+            <h1>Herramientas visuales para explorar metodos numericos</h1>
+            <p class="home-description">
+                Trabaja con metodos abiertos y cerrados en una interfaz clara, con grafico integrado
+                y resultados listos para analizar paso a paso.
+            </p>
 
-            <h2>Parámetros</h2>
-
-            <label>Función f(x)</label>
-            <input id="expr_str" placeholder="ej: 3*x - 4">
-
-            <label>Iteraciones</label>
-            <input id="iteraciones" type="number" value="100">
-
-            <label>Tolerancia</label>
-            <input id="tolerancia" value="0.0001">
-
-            <label>x1</label>
-            <input id="x1" placeholder="ej: 100">
-
-            <label>x2</label>
-            <input id="x2" placeholder="ej: 0">
-             
-           <div class="button-grid"> 
-                      <div class="metodos-grid">
-                        <button class="metodo-btn" onclick="seleccionarMetodo('secante', this)">
-                            🔵 Secante (Abierto)
-                        </button>
-                        <button class="metodo-btn" onclick="seleccionarMetodo('tangente', this)">
-                            🟣 Tangente / Newton (Abierto)
-                        </button>
-                        <button class="metodo-btn" onclick="seleccionarMetodo('biseccion', this)">
-                            🟢 Bisección (Cerrado)
-                        </button>
-                        <button class="metodo-btn" onclick="seleccionarMetodo('regla_falsa', this)">
-                            🟠 Regla Falsa (Cerrado)
-                        </button>
-                      </div>
-                      <button id="graficar-btn" onclick="graficar_y_calcular()">Graficar</button>
+            <div class="home-actions">
+                <a class="home-primary" href="./pages/raices.html">Abrir modulo de raices</a>
             </div>
-        </div>
+        </section>
+    </main>
 
-        <div class="panel-derecho">
-            <div id="grafico"></div>
+    <section class="home-modules" id="modulos">
+        <article class="module-card module-card-active">
+            <span class="module-state">Disponible</span>
+            <h3>Modulo de raices</h3>
+            <p>Analiza convergencia, aproxima soluciones y compara metodos numericos clasicos.</p>
+            <a href="./pages/raices.html">Ir al modulo</a>
+        </article>
 
-            <div class="resultados">
-                <h2>Resultados</h2>
-                <label>Iteraciones</label>
-                <span id="result-iteraciones" class="result-value"></span>
-                <label>Raíz</label>
-                <span id="result-raiz" class="result-value"></span>
-                <label>Error</label>
-                <span id="result-error" class="result-value"></span>
-            </div>
-        </div>
+        <article class="module-card">
+            <span class="module-state module-state-muted">Proximamente</span>
+            <h3>Sistemas de ecuaciones</h3>
+            <p>Espacio reservado para futuras herramientas de algebra lineal y solucion iterativa.</p>
+            <span class="module-disabled">En desarrollo</span>
+        </article>
     </section>
-
-    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
-    <script src="./js/main.js"></script>
 </body>
 </html>

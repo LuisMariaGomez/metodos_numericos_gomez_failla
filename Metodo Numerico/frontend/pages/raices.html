@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Métodos Numericos 2026</title>
+        <link rel="stylesheet" href="../styles/styles.css">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta charset="utf-8"/>
+    </head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="./raices.html"><h1>Métodos Numéricos</h1></a></li>
+        </ul>
+    </nav>
+    <section class="pantalla_principal">
+        <div class="card">
+
+            <h2>Parámetros</h2>
+
+            <label>Función f(x)</label>
+            <input id="expr_str" placeholder="ej: 3*x - 4">
+
+            <label>Iteraciones</label>
+            <input id="iteraciones" type="number" value="100">
+
+            <label>Tolerancia</label>
+            <input id="tolerancia" value="0.0001">
+
+            <label>x1</label>
+            <input id="x1" placeholder="ej: 100">
+
+            <label>x2</label>
+            <input id="x2" placeholder="ej: 0">
+             
+           <div class="button-grid"> 
+                      <div class="metodos-grid">
+                        <button class="metodo-btn" onclick="seleccionarMetodo('secante', this)">
+                            🔵 Secante (Abierto)
+                        </button>
+                        <button class="metodo-btn" onclick="seleccionarMetodo('tangente', this)">
+                            🟣 Tangente / Newton (Abierto)
+                        </button>
+                        <button class="metodo-btn" onclick="seleccionarMetodo('biseccion', this)">
+                            🟢 Bisección (Cerrado)
+                        </button>
+                        <button class="metodo-btn" onclick="seleccionarMetodo('regla_falsa', this)">
+                            🟠 Regla Falsa (Cerrado)
+                        </button>
+                      </div>
+                      <button id="graficar-btn" onclick="graficar_y_calcular()">Graficar</button>
+            </div>
+        </div>
+
+        <div class="panel-derecho">
+            <div id="grafico"></div>
+
+            <div class="resultados">
+                <h2>Resultados</h2>
+                <label>Iteraciones</label>
+                <span id="result-iteraciones" class="result-value"></span>
+                <label>Raíz</label>
+                <span id="result-raiz" class="result-value"></span>
+                <label>Error</label>
+                <span id="result-error" class="result-value"></span>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>
