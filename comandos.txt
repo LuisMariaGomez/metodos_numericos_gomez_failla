@@ -2,3 +2,4 @@ backend:
 
 uvicorn main:app --reload --port 8001
 
+source <nombre_del_entorno>/bin/activate

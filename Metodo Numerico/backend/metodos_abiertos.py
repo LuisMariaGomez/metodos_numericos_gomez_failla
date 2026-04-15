@@ -4,14 +4,15 @@ from sympy.parsing.sympy_parser import (
     standard_transformations,
     implicit_multiplication_application
 )
+from expresiones import contexto_sympy, normalizar_expresion
 
 def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
 
     transformations = standard_transformations + (implicit_multiplication_application,)
-    expr_str = expr_str.replace("^", "**")
+    expr_str = normalizar_expresion(expr_str)
 
     x = symbols('x')
-    funcion = parse_expr(expr_str, transformations=transformations, local_dict={'x': x})
+    funcion = parse_expr(expr_str, transformations=transformations, local_dict=contexto_sympy(x))
     derivada = diff(funcion, x)
 
     def f(valor):
@@ -20,12 +21,14 @@ def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
     def derivadaf(valor):
         return float(derivada.subs(x, valor).evalf())
 
-    x3_anterior = 0
     x3 = x1
     error = 0
 
     fx1 = f(x1)
     fx2 = f(x2)
+
+    if metodo == "secante" and fx1 * fx2 > 0:
+        return {"raiz": None, "iteracion": None, "error": "Intervalo inválido"}
 
     if abs(fx1) < tolerancia:
         return {"raiz": x1, "iteracion": 0, "error": 0}
@@ -34,6 +37,7 @@ def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
         return {"raiz": x2, "iteracion": 0, "error": 0}
 
     for i in range(iteraciones):
+        aproximacion_anterior = x2 if metodo == "secante" else x1
 
         if metodo == "secante":
             if fx2 - fx1 == 0:
@@ -52,19 +56,17 @@ def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
             return {"raiz": None, "iteracion": None, "error": "Método inválido"}
 
         if x3 == 0:
-            error = abs(x3 - x3_anterior)
+            error = abs(x3 - aproximacion_anterior)
         else:
-            error = abs((x3 - x3_anterior) / x3)
+            error = abs((x3 - aproximacion_anterior) / x3)
 
         if abs(f(x3)) < tolerancia or error < tolerancia:
-            return {"raiz": x3, "iteracion": i, "error": error}
+            return {"raiz": x3, "iteracion": i + 1, "error": error}
 
         if metodo == "secante":
             x1, x2 = x2, x3
             fx1, fx2 = fx2, f(x3)
         else:
             x1 = x3
-
-        x3_anterior = x3
 
     return {"raiz": x3, "iteracion": iteraciones, "error": error}
