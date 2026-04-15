@@ -14,3 +14,20 @@ python -m venv .venv
 pip install -r requirements.txt
 
 en ambos casos hay que levantar el backend con el puerto 8001, ya que si levantas en front con live server se levanta en el 8000 (el mmismo que usaria el back haciendo priblemas si es que no se cambiaria a 8001)
+
+-----------------
+
+Si el grafico se ve mal entrar a main.js, buscar la funcion
+function init() {
+    let params = {
+        appName: "graphing",
+        width: 1650,
+        height: 900,
+        showToolBar: false,
+        showAlgebraInput: false,
+        showMenuBar: false
+    };
+
+y ahi toquetear
+        width: 1650,
+        height: 900

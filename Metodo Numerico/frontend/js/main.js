@@ -13,8 +13,8 @@ function seleccionarMetodo(metodo, boton) {
 function init() {
     let params = {
         appName: "graphing",
-        width: 600,
-        height: 400,
+        width: 1650,
+        height: 900,
         showToolBar: false,
         showAlgebraInput: false,
         showMenuBar: false

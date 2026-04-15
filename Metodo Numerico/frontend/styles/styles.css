@@ -55,45 +55,63 @@ nav a {
 
 /* todo horizontal*/
 .pantalla_principal {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
     gap: 1rem;
-    width: 100vw;
-    height: calc(100vh - 84px);
-    margin: 0;
+    width: 100%;
+    min-height: calc(100vh - 84px);
+    margin: 0 auto;
     align-items: stretch;
-    justify-content: center;
-    overflow-x: auto;
-    overflow-y: hidden;
     padding: 0.5rem;
 }
 
 /* encerrar cada sector */
 .card,
-.resultados,
 #grafico {
     background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(27, 39, 62, 0.86));
     border: 1px solid rgba(148, 163, 184, 0.22);
     border-radius: 18px;
     padding: 1.25rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-    flex: 0 0 32%;
-    min-height: auto;
-    height: 100%;
     overflow: hidden;
-    min-width: 300px;
 }
+
+.card {
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-derecho {
+    display: grid;
+    grid-template-rows: minmax(420px, 1fr) auto;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.resultados {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(27, 39, 62, 0.86));
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 18px;
+    padding: 1.25rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    display: grid;
+    gap: 0.35rem;
+}
+
 /* para q el grafico ocupe todo */
 #grafico {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0.5rem;
+    min-height: 420px;
 }
 /* para q el grafico ocupe todo */
 #grafico iframe,
-#grafico canvas {
+#grafico canvas,
+#grafico > div,
+#grafico .applet_scaler,
+#grafico .applet_scaler > div {
     width: 100%;
     height: 100%;
     max-width: 100%;
@@ -125,13 +143,18 @@ select,
     box-sizing: border-box;
 }
 
+.card h2,
+.resultados h2 {
+    margin-bottom: 1rem;
+}
+
 /* botones al lado */
 .button-grid {
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 }
 
 .metodos-grid {
@@ -183,6 +206,14 @@ button:hover,
 }
 
 @media (max-width: 980px) {
+    .pantalla_principal {
+        grid-template-columns: 1fr;
+    }
+
+    .panel-derecho {
+        grid-template-rows: minmax(320px, 420px) auto;
+    }
+
     .button-grid {
         align-items: stretch;
     }
@@ -203,7 +234,9 @@ button:hover,
     #grafico {
         padding: 1rem;
     }
+
+    #grafico {
+        min-height: 300px;
+    }
 }
-
-
 
