@@ -1,5 +1,16 @@
-backend:
-
 uvicorn main:app --reload --port 8001
-
 source <nombre_del_entorno>/bin/activate
+
+si bajaste el repo lo mejor es hacer un entorno virtal, y bajar las dependencias
+
+para mac:
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+para windows:
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+
+en ambos casos hay que levantar el backend con el puerto 8001, ya que si levantas en front con live server se levanta en el 8000 (el mmismo que usaria el back haciendo priblemas si es que no se cambiaria a 8001)
