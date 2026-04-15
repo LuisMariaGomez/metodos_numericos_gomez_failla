@@ -30,17 +30,20 @@ def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
 
     # evalua la funcion en los valores iniciales
     fx1 = f(x1)
-    fx2 = f(x2)
+    if metodo == "secante":
+        fx2 = f(x2)
+    else:
+        fx2 = None  # no se usa en tangente
 
     # aca se fija que x1 y x2 encierren una raiz, sino chau, el intervalo no sirve
-    if metodo == "secante" and fx1 * fx2 > 0:
-        return {"raiz": None, "iteracion": None, "error": "Intervalo inválido"}
+##    if metodo == "secante" and fx1 * fx2 > 0:
+  ##      return {"raiz": None, "iteracion": None, "error": "Intervalo inválido"}
 
     # si alguno de los puntos iniciales ya es raiz, no hace falta iterar, ya le mandamos que es raiz
     if abs(fx1) < tolerancia:
         return {"raiz": x1, "iteracion": 0, "error": 0}
 
-    if metodo == "secante" and abs(fx2) < tolerancia:
+    if metodo == "secante" and fx2 is not None and abs(fx2) < tolerancia:
         return {"raiz": x2, "iteracion": 0, "error": 0}
 
     for i in range(iteraciones):

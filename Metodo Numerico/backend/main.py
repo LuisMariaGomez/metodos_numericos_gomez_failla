@@ -1,8 +1,9 @@
 
-#http://127.0.0.1:8000
+#http://127.0.0.1:8001
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
 from metodos_abiertos import resolver_abiertos
 from metodos_cerrados import resolver_cerrados
 
@@ -19,7 +20,7 @@ app.add_middleware(
 class datos(BaseModel):
     expr: str
     x1: float
-    x2: float
+    x2: Optional[float] = None
     iteraciones: int
     tolerancia: float
     metodo: str
@@ -32,10 +33,11 @@ def index():
 def resolver_abiertos_api(
     expr: str,
     x1: float,
-    x2: float,
+    x2: Optional[float] = None,
+    *,
     iteraciones: int,
     tolerancia: float,
-    metodo: str   # "secante" o "tangente"
+    metodo: str,   # "secante" o "tangente"
 ):
     resultado = resolver_abiertos(expr, x1, x2, iteraciones, tolerancia, metodo)
     return resultado
@@ -45,7 +47,7 @@ def resolver_abiertos_api(
 def resolver_cerrados_api(
     expr: str,
     x1: float,
-    x2: float,
+    x2: float, 
     iteraciones: int,
     tolerancia: float,
     metodo: str   # "biseccion" o "regla_falsa"
