@@ -28,23 +28,44 @@ function init() {
 async function graficar_y_calcular() {
 
     // Tomar valores del form
-    const expr = encodeURIComponent(document.getElementById("expr_str").value);
-    const x1 = document.getElementById("x1").value;
-    const x2 = document.getElementById("x2").value;
-    const iteraciones = document.getElementById("iteraciones").value;
-    const tolerancia = document.getElementById("tolerancia").value;
+    const expr = document.getElementById("expr_str").value.trim();
+    const x1 = document.getElementById("x1").value.trim();
+    const x2 = document.getElementById("x2").value.trim();
+    const iteraciones = document.getElementById("iteraciones").value.trim();
+    const tolerancia = document.getElementById("tolerancia").value.trim();
 
     if (!metodoSeleccionado) {
         alert("Selecciona un método primero");
         return;
     }
 
-    let url;
-    if (metodoSeleccionado === "secante" || metodoSeleccionado === "tangente") {
-        url = `http://127.0.0.1:8001/resolver_abiertos?expr=${expr}&x1=${x1}&x2=${x2}&iteraciones=${iteraciones}&tolerancia=${tolerancia}&metodo=${metodoSeleccionado}`;
-    } else {
-        url = `http://127.0.0.1:8001/resolver_cerrados?expr=${expr}&x1=${x1}&x2=${x2}&iteraciones=${iteraciones}&tolerancia=${tolerancia}&metodo=${metodoSeleccionado}`;
+    if (!expr || !x1 || !iteraciones || !tolerancia) {
+        alert("Completa función, x1, iteraciones y tolerancia");
+        return;
     }
+
+    if (metodoSeleccionado !== "tangente" && !x2) {
+        alert("El método seleccionado requiere x2");
+        return;
+    }
+
+    const endpoint = (metodoSeleccionado === "secante" || metodoSeleccionado === "tangente")
+        ? "resolver_abiertos"
+        : "resolver_cerrados";
+
+    const params = new URLSearchParams({
+        expr,
+        x1,
+        iteraciones,
+        tolerancia,
+        metodo: metodoSeleccionado
+    });
+
+    if (x2 && metodoSeleccionado !== "tangente") {
+        params.append("x2", x2);
+    }
+
+    const url = `http://127.0.0.1:8001/${endpoint}?${params.toString()}`;
 
     try {
         // Llamada a FastAPI
@@ -86,7 +107,7 @@ async function graficar_y_calcular() {
     if (window.applet && window.applet.getAppletObject()) {
         window.applet.getAppletObject().reset();
         // graficar función
-        window.applet.getAppletObject().evalCommand("f(x) = " + decodeURIComponent(expr));
+        window.applet.getAppletObject().evalCommand("f(x) = " + expr);
     }
 }
 window.onload = init;
