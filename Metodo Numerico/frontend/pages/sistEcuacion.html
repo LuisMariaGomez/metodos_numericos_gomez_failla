@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistemas de Ecuaciones</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="./raices.html"><h1>Sistemas de Ecuaciones</h1></a></li>
+        </ul>
+    </nav>
+
+    <section class="pantalla_principal">
+        <div class="card">
+            <h2>Sistemas de Ecuaciones</h2>
+
+            <div class="form-grid">
+                <div>
+                    <label>Filas y columnas</label>
+                    <input id="matrix-size" type="number" min="2" max="6">
+                </div>
+
+                <div>
+                    <label>Tolerancia</label>
+                    <input id="tolerancia" value="0.0001">
+                </div>
+
+                <div>
+                    <label>Iteraciones</label>
+                    <input id="iteraciones" type="number" value="100">
+                </div>
+            </div>
+
+            <div class="optimize-row">
+                <button id="optimizar-btn" class="metodo-btn">Optimizar</button>
+            </div>
+
+            <h3>Matriz</h3>
+            <div class="matrix-panel">
+                <table class="matrix-table">
+                    <tbody>
+                        <tr>
+                            <td ><input placeholder="x" ></td>
+                            <td><input placeholder="y" ></td>
+                            <td><input placeholder="z"></td>
+                        </tr>
+                        <tr>
+                            <td ><input placeholder="x" ></td>
+                            <td><input placeholder="y" ></td>
+                            <td><input placeholder="z" ></td>
+                        </tr>
+                        <tr>
+                            <td><input placeholder="x" ></td>
+                            <td><input placeholder="y" ></td>
+                            <td><input placeholder="z" ></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="equals-sign">=</div>
+                <table class="ti-table">
+                    <tbody>
+                        <tr><td><input ></td></tr>
+                        <tr><td><input ></td></tr>
+                        <tr><td><input ></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="button-grid" style="margin-top: 1.5rem;">
+                <button id="calcular-btn">Calcular</button>
+            </div>
+        </div>
+
+        <div class="panel-derecho">
+            <div class="result-card">
+                <div class="result-row">
+                    <label>x</label>
+                    <span class="result-value-large" id="result-x"></span>
+                </div>
+                <div class="result-row">
+                    <label>y</label>
+                    <span class="result-value-large" id="result-y"></span>
+                </div>
+                <div class="result-row">
+                    <label>z</label>
+                    <span class="result-value-large" id="result-z"></span>
+                </div>
+                <div class="toggle-row">
+                    <button class="metodo-btn  metodo-select" onclick="seleccionarMetodo('gauss-jordan', this)">Gauss-Jordan</button>
+                    <button class="metodo-btn metodo-select" onclick="seleccionarMetodo('gauss-seidel', this)">Gauss-Seidel</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
