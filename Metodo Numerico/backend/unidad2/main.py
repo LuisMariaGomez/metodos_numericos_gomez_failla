@@ -1,11 +1,22 @@
-matriz = [
-    [5, 1, 4.01015],
-    [-1.301525, 0.25, 1.10075],
-    [3.751125, 0.801216, 3.002028],
-]
-valores_independientes = [1, 0.225, 0.75]
+n = int(input("Ingrese la cantidad de filas de la matriz: "))
 
-n = len(matriz)
+matriz = []
+valores_independientes = []
+
+for i in range(n):
+    fila = []
+    print(f"\nIngrese los valores de la fila {i + 1}:")
+
+    for j in range(n):
+        valor = float(input(f"Ingrese el valor de A[{i + 1}][{j + 1}]: "))
+        fila.append(valor)
+
+    valor_independiente = float(
+        input(f"Ingrese el termino independiente de la fila {i + 1}: ")
+    )
+
+    matriz.append(fila)
+    valores_independientes.append(valor_independiente)
 
 print()
 # para recorresr las filas
