@@ -229,12 +229,16 @@ function generarMatriz() {
 
     const matrixTable = document.querySelector(".matrix-table tbody");
     const tiTable = document.querySelector(".ti-table tbody");
+    const resultContainer = document.getElementById("result-container");
 
-    // Limpiar tablas
+    // 🔹 Limpiar tablas
     matrixTable.innerHTML = "";
     tiTable.innerHTML = "";
 
-    // Generar matriz NxN
+    // 🔹 Limpiar resultados
+    resultContainer.innerHTML = "";
+
+    // 🔹 Generar matriz NxN
     for (let i = 0; i < size; i++) {
         const tr = document.createElement("tr");
 
@@ -251,7 +255,7 @@ function generarMatriz() {
 
         matrixTable.appendChild(tr);
 
-        // Término independiente
+        // 🔹 Término independiente
         const trTI = document.createElement("tr");
         const tdTI = document.createElement("td");
         const inputTI = document.createElement("input");
@@ -264,4 +268,33 @@ function generarMatriz() {
 
         tiTable.appendChild(trTI);
     }
+
+    // 🔹 Generar resultados dinámicos
+    for (let i = 0; i < size; i++) {
+        const row = document.createElement("div");
+        row.classList.add("result-row");
+
+        const label = document.createElement("label");
+        label.textContent = `x${i+1}`;
+
+        const span = document.createElement("span");
+        span.classList.add("result-value-large");
+        span.id = `result-${i}`;
+
+        row.appendChild(label);
+        row.appendChild(span);
+
+        resultContainer.appendChild(row);
+    }
+
+    // 🔹 Volver a agregar botones
+    const botones = document.createElement("div");
+    botones.classList.add("button-grid");
+
+    botones.innerHTML = `
+        <button class="metodo-btn" onclick="seleccionarMetodo('gauss_jordan', this)">Gauss-Jordan</button>
+        <button class="metodo-btn" onclick="seleccionarMetodo('gauss_seidel', this)">Gauss-Seidel</button>
+    `;
+
+    resultContainer.appendChild(botones);
 }
