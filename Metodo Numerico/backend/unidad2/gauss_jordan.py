@@ -3,7 +3,7 @@ valores de ingreso:
 matriz: matriz de coeficientes
 valores_independientes: vector de terminos independientes
 """
-def gauss_jordan(matriz, valores_independientes):
+def resolver_gauss_jordan(matriz, valores_independientes):
     n = len(matriz)
     # para recorrer las filas
     for i in range(n):

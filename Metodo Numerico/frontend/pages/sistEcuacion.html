@@ -35,7 +35,7 @@
             </div>
 
             <div class="optimize-row">
-                <button id="optimizar-btn" class="metodo-btn">Optimizar</button>
+                <button id="optimizar-btn" >Optimizar</button>
             </div>
 
             <h3>Matriz</h3>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="button-grid" style="margin-top: 1.5rem;">
-                <button id="calcular-btn">Calcular</button>
+                <button id="calcular-btn"onclick="calcular_sistema()">Calcular</button>
             </div>
         </div>
 
@@ -88,12 +88,13 @@
                     <label>z</label>
                     <span class="result-value-large" id="result-z"></span>
                 </div>
-                <div class="toggle-row">
-                    <button class="metodo-btn  metodo-select" onclick="seleccionarMetodo('gauss-jordan', this)">Gauss-Jordan</button>
-                    <button class="metodo-btn metodo-select" onclick="seleccionarMetodo('gauss-seidel', this)">Gauss-Seidel</button>
+                <div class="button-grid">
+                    <button class="metodo-btn " onclick="seleccionarMetodo('gauss_jordan', this)">Gauss-Jordan</button>
+                    <button class="metodo-btn " onclick="seleccionarMetodo('gauss_seidel', this)">Gauss-Seidel</button>
                 </div>
             </div>
         </div>
     </section>
+    <script src="../js/main.js"></script>
 </body>
 </html>

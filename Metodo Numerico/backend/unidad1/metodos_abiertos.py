@@ -4,7 +4,7 @@ from sympy.parsing.sympy_parser import (
     standard_transformations,
     implicit_multiplication_application
 )
-from expresiones import contexto_sympy, normalizar_expresion
+from .expresiones import contexto_sympy, normalizar_expresion
 
 def resolver_abiertos(expr_str, x1, x2, iteraciones, tolerancia, metodo):
     # prepara la expresion para SymPy: (todo esta en el otro archivo de expresiones porque aca hace ruido)

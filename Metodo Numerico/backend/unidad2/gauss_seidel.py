@@ -5,7 +5,7 @@ b: vector de términos independientes
 tol: tolerancia para la convergencia
 max_iter: número máximo de iteraciones permitidas
 """
-def gauss_seidel(A, b, tol=1e-4, max_iteraciones=100):
+def resolver_gauss_seidel(A, b, tol=1e-4, max_iteraciones=100):
     n = len(b)
     x = [0.0] * n  # vector inicial en 0
 
