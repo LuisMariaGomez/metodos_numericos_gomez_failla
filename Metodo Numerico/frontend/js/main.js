@@ -9,112 +9,10 @@ function seleccionarMetodo(metodo, boton) {
         boton.classList.add('selected');
     }
 }
-/* GAUSS SEIDEL Y JORDAN */
-async function calcular_sistema() {
-
-    const tolerancia = document.getElementById("tolerancia").value.trim();
-    const iteraciones = document.getElementById("iteraciones").value.trim();
-
-   if (!metodoSeleccionado) {
-        alert("Selecciona un método primero");
-        return;
-    }
-
-    // Obtener matriz
-    const filas = document.querySelectorAll(".matrix-table tbody tr");
-    let matriz = [];
-
-    filas.forEach(fila => {
-        const inputs = fila.querySelectorAll("input");
-        let filaValores = [];
-
-        inputs.forEach(input => {
-            const valor = input.value.trim();
-            if (valor === "" || isNaN(valor)) {
-                filaValores.push(0);
-            } else {
-                filaValores.push(parseFloat(valor));
-            }
-        });
-
-        matriz.push(filaValores);
-    });
-
-    // Obtener términos independientes
-    const tiInputs = document.querySelectorAll(".ti-table input");
-    let valores_independientes = [];
-
-    tiInputs.forEach(input => {
-        const valor = input.value.trim();
-        if (valor === "" || isNaN(valor)) {
-            valores_independientes.push(0);
-        } else {
-            valores_independientes.push(parseFloat(valor));
-        }
-    });
-
-    if (matriz.length === 0 || valores_independientes.length === 0) {
-        alert("Completa la matriz y los términos independientes");
-        return;
-    }
-
-    // Endpoint
-    const endpoint = metodoSeleccionado === "gauss_jordan"
-        ? "resolver_gauss_jordan"
-        : "resolver_gauss_seidel";
-
-    const url = `http://127.0.0.1:8001/${endpoint}`;
-    //  Body
-    let body = {
-        matriz: matriz,
-        valores_independientes: valores_independientes
-    };
-
-    if (metodoSeleccionado === "gauss_seidel") {
-        body.tolerancia = parseFloat(tolerancia) || 0.0001;
-        body.iteraciones = parseInt(iteraciones) || 100;
-    }
-
-    try {
-        // Llamada a FastAPI
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body)
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        //  Mostrar resultados
-        if (!data || data.length === 0) {
-            document.getElementById("result-x").textContent = "-";
-            document.getElementById("result-y").textContent = "-";
-            document.getElementById("result-z").textContent = "Sin resultado";
-        } else {
-            document.getElementById("result-x").textContent =
-                data[0] !== undefined ? Number(data[0]).toFixed(6) : "N/A";
-
-            document.getElementById("result-y").textContent =
-                data[1] !== undefined ? Number(data[1]).toFixed(6) : "N/A";
-
-            document.getElementById("result-z").textContent =
-                data[2] !== undefined ? Number(data[2]).toFixed(6) : "N/A";
-        }
-
-    } catch (err) {
-        document.getElementById("result-x").textContent = "Error";
-        document.getElementById("result-y").textContent = "No conecta";
-        document.getElementById("result-z").textContent = err.message || "";
-    }
-}
 
 function init() {
+    if (typeof GGBApplet === "undefined") return; // 👈 clave
+
     let params = {
         appName: "graphing",
         width: 1650,
@@ -125,7 +23,7 @@ function init() {
     };
 
     applet = new GGBApplet(params, true);
-    window.applet = applet; // Hacerlo global para que main.js lo use
+    window.applet = applet;
     applet.inject("grafico");
 }
 
@@ -215,9 +113,13 @@ async function graficar_y_calcular() {
         window.applet.getAppletObject().evalCommand("f(x) = " + expr);
     }
 }
-window.onload = init;
+window.onload = () => {
+    if (document.getElementById("grafico")) {
+        init();
+    }
+};
 
-document.getElementById("optimizar-btn").addEventListener("click", generarMatriz);
+document.getElementById("optimizar-btn")?.addEventListener("click", generarMatriz);
 
 function generarMatriz() {
     const size = parseInt(document.getElementById("matrix-size").value);
@@ -297,4 +199,107 @@ function generarMatriz() {
     `;
 
     resultContainer.appendChild(botones);
+}
+/* GAUSS SEIDEL Y JORDAN */
+async function calcular_sistema() {
+
+    const tolerancia = document.getElementById("tolerancia").value.trim();
+    const iteraciones = document.getElementById("iteraciones").value.trim();
+    const size = parseInt(document.getElementById("matrix-size")?.value);
+
+    if (!size) return;
+   if (!metodoSeleccionado) {
+        alert("Selecciona un método primero");
+        return;
+    }
+
+    // Obtener matriz
+    const filas = document.querySelectorAll(".matrix-table tbody tr");
+    let matriz = [];
+
+    filas.forEach(fila => {
+        const inputs = fila.querySelectorAll("input");
+        let filaValores = [];
+
+        inputs.forEach(input => {
+            const valor = input.value.trim();
+            if (valor === "" || isNaN(valor)) {
+                filaValores.push(0);
+            } else {
+                filaValores.push(parseFloat(valor));
+            }
+        });
+
+        matriz.push(filaValores);
+    });
+
+    // Obtener términos independientes
+    const tiInputs = document.querySelectorAll(".ti-table input");
+    let valores_independientes = [];
+
+    tiInputs.forEach(input => {
+        const valor = input.value.trim();
+        if (valor === "" || isNaN(valor)) {
+            valores_independientes.push(0);
+        } else {
+            valores_independientes.push(parseFloat(valor));
+        }
+    });
+
+    if (matriz.length === 0 || valores_independientes.length === 0) {
+        alert("Completa la matriz y los términos independientes");
+        return;
+    }
+
+    // Endpoint
+    const endpoint = metodoSeleccionado === "gauss_jordan"
+        ? "resolver_gauss_jordan"
+        : "resolver_gauss_seidel";
+
+    const url = `http://127.0.0.1:8001/${endpoint}`;
+    //  Body
+    let body = {
+        matriz: matriz,
+        valores_independientes: valores_independientes
+    };
+
+    if (metodoSeleccionado === "gauss_seidel") {
+        body.tolerancia = parseFloat(tolerancia) || 0.0001;
+        body.iteraciones = parseInt(iteraciones) || 100;
+    }
+
+    try {
+        // Llamada a FastAPI
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Mostrar resultados dinámicamente
+        if (!data || data.length === 0) {
+            for (let i = 0; i < size; i++) {
+                document.getElementById(`result-${i}`).textContent = "-";
+            }
+        } else {
+            for (let i = 0; i < size; i++) {
+                document.getElementById(`result-${i}`).textContent =
+                    data[i] !== undefined ? Number(data[i]).toFixed(6) : "N/A";
+            }
+        }
+
+    } catch (err) {
+        const size = parseInt(document.getElementById("matrix-size").value);
+        for (let i = 0; i < size; i++) {
+            document.getElementById(`result-${i}`).textContent = "Error";
+        }
+    }
 }
