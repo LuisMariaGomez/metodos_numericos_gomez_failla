@@ -283,16 +283,17 @@ async function calcular_sistema() {
         }
 
         const data = await response.json();
+        const solucion = Array.isArray(data) ? data : data.solucion;
 
         // Mostrar resultados dinámicamente
-        if (!data || data.length === 0) {
+        if (!Array.isArray(solucion) || solucion.length === 0) {
             for (let i = 0; i < size; i++) {
                 document.getElementById(`result-${i}`).textContent = "-";
             }
         } else {
             for (let i = 0; i < size; i++) {
                 document.getElementById(`result-${i}`).textContent =
-                    data[i] !== undefined ? Number(data[i]).toFixed(6) : "N/A";
+                    solucion[i] !== undefined ? Number(solucion[i]).toFixed(6) : "N/A";
             }
         }
 

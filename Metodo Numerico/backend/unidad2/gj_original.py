@@ -74,3 +74,13 @@ for i in range(n):
 print("Validaciones")
 for i in range(n):
     print(f"{matriz[i]} | {valores_independientes[i]}")
+
+
+# Para probar
+# A = [[4, -1, 0, 0],
+#      [-1, 4, -1, 0],
+#      [0, -1, 4, -1],
+#      [0, 0, -1, 3]]
+# b = [15, 10, 10, 10]
+# resultado = gauss_seidel(A, b)
+# print("La solución es:", resultado)
