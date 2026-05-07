@@ -8,6 +8,7 @@ function seleccionarMetodo(metodo, boton) {
     if (boton) {
         boton.classList.add('selected');
     }
+    actualizarVisibilidadEstadoSistema();
 }
 
 function init() {
@@ -121,6 +122,39 @@ window.onload = () => {
 
 document.getElementById("optimizar-btn")?.addEventListener("click", generarMatriz);
 
+function mostrarResultadoSistema(index, value) {
+    const resultElement = document.getElementById(`result-${index}`);
+    if (resultElement) {
+        resultElement.textContent = value;
+    }
+}
+
+function mostrarEstadoSistema(value, convergio = null) {
+    const estadoElement = document.getElementById("result-estado");
+    if (!estadoElement) return;
+
+    estadoElement.textContent = value;
+    estadoElement.classList.remove("status-ok", "status-error");
+
+    if (convergio === true) {
+        estadoElement.classList.add("status-ok");
+    } else if (convergio === false) {
+        estadoElement.classList.add("status-error");
+    }
+}
+
+function limpiarEstadoSistema() {
+    mostrarEstadoSistema("");
+}
+
+function actualizarVisibilidadEstadoSistema() {
+    const estadoElement = document.getElementById("result-estado");
+    const estadoRow = estadoElement?.closest(".result-row");
+    if (!estadoRow) return;
+
+    estadoRow.classList.toggle("is-hidden", metodoSeleccionado !== "gauss_seidel");
+}
+
 function generarMatriz() {
     const size = parseInt(document.getElementById("matrix-size").value);
 
@@ -190,6 +224,21 @@ function generarMatriz() {
     }
 
     // 🔹 Volver a agregar botones
+    const estadoRow = document.createElement("div");
+    estadoRow.classList.add("result-row");
+
+    const estadoLabel = document.createElement("label");
+    estadoLabel.textContent = "Estado";
+
+    const estadoSpan = document.createElement("span");
+    estadoSpan.classList.add("result-value-large", "result-status");
+    estadoSpan.id = "result-estado";
+
+    estadoRow.appendChild(estadoLabel);
+    estadoRow.appendChild(estadoSpan);
+    resultContainer.appendChild(estadoRow);
+    actualizarVisibilidadEstadoSistema();
+
     const botones = document.createElement("div");
     botones.classList.add("button-grid");
 
@@ -257,6 +306,12 @@ async function calcular_sistema() {
         : "resolver_gauss_seidel";
 
     const url = `http://127.0.0.1:8001/${endpoint}`;
+    if (metodoSeleccionado === "gauss_seidel") {
+        mostrarEstadoSistema("Calculando...");
+    } else {
+        limpiarEstadoSistema();
+    }
+
     //  Body
     let body = {
         matriz: matriz,
@@ -284,23 +339,40 @@ async function calcular_sistema() {
 
         const data = await response.json();
         const solucion = Array.isArray(data) ? data : data.solucion;
+        const convergio = typeof data.convergio === "boolean" ? data.convergio : null;
 
         // Mostrar resultados dinámicamente
         if (!Array.isArray(solucion) || solucion.length === 0) {
             for (let i = 0; i < size; i++) {
-                document.getElementById(`result-${i}`).textContent = "-";
+                mostrarResultadoSistema(i, "-");
+            }
+            if (metodoSeleccionado === "gauss_seidel") {
+                mostrarEstadoSistema("No se obtuvo solucion", false);
             }
         } else {
             for (let i = 0; i < size; i++) {
-                document.getElementById(`result-${i}`).textContent =
-                    solucion[i] !== undefined ? Number(solucion[i]).toFixed(6) : "N/A";
+                mostrarResultadoSistema(
+                    i,
+                    solucion[i] !== undefined ? Number(solucion[i]).toFixed(6) : "N/A"
+                );
+            }
+
+            if (metodoSeleccionado === "gauss_seidel") {
+                if (convergio === true) {
+                    mostrarEstadoSistema("Convergio", true);
+                } else if (convergio === false) {
+                    mostrarEstadoSistema(data.mensaje || "No convergio", false);
+                }
             }
         }
 
     } catch (err) {
         const size = parseInt(document.getElementById("matrix-size").value);
         for (let i = 0; i < size; i++) {
-            document.getElementById(`result-${i}`).textContent = "Error";
+            mostrarResultadoSistema(i, "Error");
+        }
+        if (metodoSeleccionado === "gauss_seidel") {
+            mostrarEstadoSistema("No se pudo calcular", false);
         }
     }
 }

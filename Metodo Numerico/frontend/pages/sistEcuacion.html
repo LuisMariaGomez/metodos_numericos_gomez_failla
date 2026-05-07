@@ -20,7 +20,7 @@
             <div class="form-grid">
                 <div>
                     <label>Filas y columnas</label>
-                    <input id="matrix-size" type="number" min="2" max="6">
+                    <input id="matrix-size" type="number" min="2" max="6" value="3">
                 </div>
 
                 <div>
@@ -77,16 +77,20 @@
         <div class="result card">
             <div class="result-card" id="result-container">
                 <div class="result-row">
-                    <label>x</label>
-                    <span class="result-value-large" id="result-x"></span>
+                    <label>x1</label>
+                    <span class="result-value-large" id="result-0"></span>
                 </div>
                 <div class="result-row">
-                    <label>y</label>
-                    <span class="result-value-large" id="result-y"></span>
+                    <label>x2</label>
+                    <span class="result-value-large" id="result-1"></span>
                 </div>
                 <div class="result-row">
-                    <label>z</label>
-                    <span class="result-value-large" id="result-z"></span>
+                    <label>x3</label>
+                    <span class="result-value-large" id="result-2"></span>
+                </div>
+                <div class="result-row is-hidden">
+                    <label>Estado</label>
+                    <span class="result-value-large result-status" id="result-estado"></span>
                 </div>
                 <div class="button-grid">
                     <button class="metodo-btn " onclick="seleccionarMetodo('gauss_jordan', this)">Gauss-Jordan</button>

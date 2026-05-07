@@ -498,6 +498,23 @@ button:hover,
             gap: 1rem;
             width: min(400px, 100%);
         }
+
+        .result-status {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .result-status.status-ok {
+            color: #22c55e;
+        }
+
+        .result-status.status-error {
+            color: #f87171;
+        }
+
+        .is-hidden {
+            display: none !important;
+        }
 /*input en una misma fila*/
 .form-grid {
     display: grid;
