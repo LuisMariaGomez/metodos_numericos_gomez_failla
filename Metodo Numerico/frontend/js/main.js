@@ -175,20 +175,25 @@ function generarMatriz() {
     resultContainer.innerHTML = "";
 
     // 🔹 Generar matriz NxN
-    for (let i = 0; i < size; i++) {
-        const tr = document.createElement("tr");
+for (let i = 0; i < size; i++) {
+    const tr = document.createElement("tr");
 
-        for (let j = 0; j < size; j++) {
-            const td = document.createElement("td");
-            const input = document.createElement("input");
+    for (let j = 0; j < size; j++) {
+        const td = document.createElement("td");
+        const input = document.createElement("input");
 
-            input.type = "number";
-            input.placeholder = `a${i+1}${j+1}`;
+        input.type = "number";
+        input.placeholder = `a${i+1}${j+1}`;
 
-            td.appendChild(input);
-            tr.appendChild(td);
-        }
+        // 🔹 Agrandar inputs
+        input.style.width = "120px";
+        input.style.height = "45px";
+        input.style.fontSize = "18px";
+        input.style.textAlign = "center";
 
+        td.appendChild(input);
+        tr.appendChild(td);
+    }
         matrixTable.appendChild(tr);
 
         // 🔹 Término independiente
@@ -203,6 +208,12 @@ function generarMatriz() {
         trTI.appendChild(tdTI);
 
         tiTable.appendChild(trTI);
+
+        document.querySelector(".card").style.width = "100%";
+        document.querySelector(".card").style.minWidth = `${size * 140}px`;
+        const resultCard = document.getElementById("result-card");
+        resultCard.style.position = "relative";
+        resultCard.style.left = "150px";   //270 para 5x5, 150 para 4x4
     }
 
     // 🔹 Generar resultados dinámicos
