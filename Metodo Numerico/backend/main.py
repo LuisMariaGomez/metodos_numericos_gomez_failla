@@ -1,7 +1,10 @@
 
 #http://127.0.0.1:8001
-from fastapi import FastAPI
+import traceback
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from fastapi import Body
 from typing import Optional
@@ -26,6 +29,15 @@ class datos(BaseModel):
     iteraciones: int
     tolerancia: float
     metodo: str
+
+
+@app.exception_handler(Exception)
+async def manejar_error_interno(request: Request, exc: Exception):
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc) or "Internal Server Error"}
+    )
 
 @app.get("/")
 def index():

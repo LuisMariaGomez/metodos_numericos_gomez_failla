@@ -74,10 +74,16 @@ async function graficar_y_calcular() {
     try {
         // Llamada a FastAPI
         const response = await fetch(url);
+        const contentType = response.headers.get("content-type") || "";
+        const data = contentType.includes("application/json")
+            ? await response.json()
+            : null;
+
         if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            throw new Error(
+                data?.detail || data?.error || `HTTP ${response.status}: ${response.statusText}`
+            );
         }
-        const data = await response.json();
 
         // Mostrar resultados en pantalla
         if (typeof data.error === "string") {
@@ -102,9 +108,16 @@ async function graficar_y_calcular() {
         }
 
     } catch (err) {
-        document.getElementById("result-iteraciones").textContent = "Error";
-        document.getElementById("result-raiz").textContent = "No se pudo conectar con la API";
-        document.getElementById("result-error").textContent = err.message || "";
+        const mensaje = err.message || "Error inesperado";
+        const esErrorDeConexion = err instanceof TypeError;
+
+        document.getElementById("result-iteraciones").textContent = "-";
+        document.getElementById("result-raiz").textContent = esErrorDeConexion
+            ? "No se pudo conectar con la API"
+            : "Error al calcular";
+        document.getElementById("result-error").textContent = esErrorDeConexion
+            ? `${mensaje} (${url})`
+            : mensaje;
     }
 
     // borrar gráfico anterior

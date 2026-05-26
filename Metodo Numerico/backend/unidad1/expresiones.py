@@ -1,6 +1,6 @@
 import re
 
-from sympy import Abs
+from sympy import Abs, E, exp
 
 
 def normalizar_expresion(expr_str):
@@ -10,7 +10,7 @@ def normalizar_expresion(expr_str):
 
 
 def contexto_sympy(x):
-    return {"x": x, "Abs": Abs}
+    return {"x": x, "Abs": Abs, "e": E, "E": E, "exp": exp}
 
 
 def _reemplazar_valor_absoluto(expr_str):

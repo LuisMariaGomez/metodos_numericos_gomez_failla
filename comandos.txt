@@ -4,7 +4,7 @@ si bajaste el repo lo mejor es hacer un entorno virtal, y bajar las dependencias
 
 para mac:
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate   source metodosnumericos-env/bin/activate
 pip install -r requirements.txt
 
 para windows:
