@@ -78,3 +78,34 @@ def regresion_lineal(puntos_cargados, tolerancia=0.8):
         "Porcentaje de efectividad": f"{r:.2f}%",
         "Efectividad de ajuste": ajuste
     }
+
+
+# para probar/ selecciona todo y dale al crtl + k + u para quitar los comentarios y probar la función 
+
+# puntos_completos = [
+#     [-3, -7.5],
+#     [0.5, -2.25],
+#     [1, -1.5],
+#     [1.5, 1],
+#     [2, 0],
+#     [3, 0],
+#     [5, 4.5]
+# ]
+
+# print("--- PRUEBA 1: Todos los puntos ---")
+# resultado_1 = regresion_lineal(puntos_completos)
+# for clave, valor in resultado_1.items():
+#     print(f"{clave}: {valor}")
+
+# puntos_reducidos = [
+#     [-3, -7.5],
+#     [0.5, -2.25],
+#     [1, -1.5],
+#     [2, 0],
+#     [5, 4.5]
+# ]
+
+# print("\n--- PRUEBA 2: Quitando los puntos (1.5, 1) y (3, 0) ---")
+# resultado_2 = regresion_lineal(puntos_reducidos)
+# for clave, valor in resultado_2.items():
+#     print(f"{clave}: {valor}")
