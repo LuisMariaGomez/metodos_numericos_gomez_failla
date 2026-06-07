@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Integracion Numerica</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html"><h1>Integracion Numerica</h1></a></li>
+        </ul>
+    </nav>
+
+    <section class="integracion-layout">
+        <div class="integracion-grid">
+            <div class="card integracion-card">
+                <h2>Datos de entrada</h2>
+
+                <div class="integracion-row">
+                    <label for="funcion-integracion">F(x):</label>
+                    <input id="funcion-integracion" placeholder="ej: x^2 + 3*x">
+                </div>
+
+                <div class="integracion-row integracion-limits">
+                    <div>
+                        <label for="xi-integracion">Xi:</label>
+                        <input id="xi-integracion" type="number" step="any">
+                    </div>
+                    <div>
+                        <label for="xd-integracion">Xd:</label>
+                        <input id="xd-integracion" type="number" step="any">
+                    </div>
+                </div>
+
+                <div class="integracion-row">
+                    <label for="n-integracion">Cantidad de subintervalos (n):</label>
+                    <input id="n-integracion" type="number" min="1" value="2">
+                </div>
+
+                <div class="integracion-row">
+                    <label for="metodo-integracion">Metodo:</label>
+                    <select id="metodo-integracion">
+                        <option value="">Seleccionar</option>
+                        <option value="trapecios_simple">Trapecios simple</option>
+                        <option value="trapecios_multiple">Trapecios multiple</option>
+                        <option value="simpson_1_3_simple">Simpson 1/3 simple</option>
+                        <option value="simpson_1_3_multiple">Simpson 1/3 multiple</option>
+                        <option value="simpson_3_8">Simpson 3/8</option>
+                        <option value="simpson_combinado">Simpson combinado</option>
+                    </select>
+                </div>
+
+                <div class="button-grid">
+                    <button id="calcular-integracion-btn" type="button" onclick="calcular_integracion()">Calcular</button>
+                </div>
+            </div>
+
+            <div class="card integracion-card">
+                <h2>Resultado</h2>
+
+                <div class="integracion-row">
+                    <label for="result-area-integracion">Area:</label>
+                    <span class="result-value-large result-status" id="result-area-integracion"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="grafico-integracion"></div>
+    </section>
+
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

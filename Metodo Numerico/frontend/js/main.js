@@ -21,7 +21,9 @@ function seleccionarRegresion(metodo, boton) {
 
 function init() {
     if (typeof GGBApplet === "undefined") return; // 👈 clave
-    const graficoId = document.getElementById("grafico-regresion") ? "grafico-regresion" : "grafico";
+    const graficoId = ["grafico-integracion", "grafico-regresion", "grafico"]
+        .find(id => document.getElementById(id));
+    if (!graficoId) return;
 
     let params = {
         appName: "graphing",
@@ -137,7 +139,11 @@ async function graficar_y_calcular() {
     }
 }
 window.onload = () => {
-    if (document.getElementById("grafico") || document.getElementById("grafico-regresion")) {
+    if (
+        document.getElementById("grafico") ||
+        document.getElementById("grafico-regresion") ||
+        document.getElementById("grafico-integracion")
+    ) {
         init();
     }
 };
@@ -596,6 +602,101 @@ async function calcular_regresion() {
             ajuste.textContent = err.message || "No se pudo calcular";
             ajuste.classList.remove("status-ok");
             ajuste.classList.add("status-error");
+        }
+    }
+}
+
+function obtenerExpresionGeogebra(funcion) {
+    return funcion
+        .trim()
+        .replace(/\*\*/g, "^")
+        .replace(/(\d)(x)/g, "$1*$2");
+}
+
+function graficarIntegracion(funcion, xi, xd) {
+    if (!window.applet || !window.applet.getAppletObject) return;
+
+    const ggb = window.applet.getAppletObject();
+    if (!ggb) return;
+
+    const expresion = obtenerExpresionGeogebra(funcion);
+
+    ggb.reset();
+    ggb.evalCommand(`f(x) = ${expresion}`);
+    ggb.setColor("f", 96, 165, 250);
+    ggb.setLineThickness("f", 5);
+
+    ggb.evalCommand(`A = (${xi}, 0)`);
+    ggb.evalCommand(`B = (${xd}, 0)`);
+    ggb.evalCommand(`area = Integral(f, ${xi}, ${xd})`);
+
+    ggb.setColor("A", 34, 197, 94);
+    ggb.setColor("B", 34, 197, 94);
+    ggb.setPointSize("A", 6);
+    ggb.setPointSize("B", 6);
+    ggb.setColor("area", 34, 197, 94);
+    ggb.setFilling("area", 0.35);
+}
+
+function metodoIntegracionRequiereN(metodo) {
+    return ["trapecios_multiple", "simpson_1_3_multiple", "simpson_combinado"].includes(metodo);
+}
+
+async function calcular_integracion() {
+    const funcion = document.getElementById("funcion-integracion")?.value.trim();
+    const xi = parseFloat(document.getElementById("xi-integracion")?.value);
+    const xd = parseFloat(document.getElementById("xd-integracion")?.value);
+    const n = parseInt(document.getElementById("n-integracion")?.value);
+    const metodo = document.getElementById("metodo-integracion")?.value;
+    const areaElement = document.getElementById("result-area-integracion");
+
+    if (!funcion || Number.isNaN(xi) || Number.isNaN(xd) || !metodo) {
+        alert("Completa funcion, Xi, Xd y metodo");
+        return;
+    }
+
+    if (metodoIntegracionRequiereN(metodo) && (!n || n <= 0)) {
+        alert("Ingresa una cantidad de subintervalos mayor a 0");
+        return;
+    }
+
+    if (metodo === "simpson_1_3_multiple" && n % 2 !== 0) {
+        alert("Simpson 1/3 multiple requiere n par");
+        return;
+    }
+
+    const body = { funcion, xi, xd, metodo };
+    if (!Number.isNaN(n)) {
+        body.n = n;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:8001/resolver_integracion", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data?.detail || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        if (areaElement) {
+            areaElement.textContent = Number(data.area).toFixed(6);
+            areaElement.classList.remove("status-error");
+            areaElement.classList.add("status-ok");
+        }
+
+        graficarIntegracion(funcion, xi, xd);
+    } catch (err) {
+        if (areaElement) {
+            areaElement.textContent = err.message || "No se pudo calcular";
+            areaElement.classList.remove("status-ok");
+            areaElement.classList.add("status-error");
         }
     }
 }
