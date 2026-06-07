@@ -121,3 +121,43 @@ def regresion_polinomial(puntos_cargados, grado, tolerancia=0.8):
         "Coeficiente de correlación (r)": f"{r:.4f}%",
         "Efectividad de ajuste": f"El ajuste es {ajuste.lower()}." # esto es para que quede "El ajuste es aceptable." o "El ajuste es no aceptable."
     }
+
+
+
+# Lo mismo, crtl + k + u para probar 
+
+# Prueba grado 2
+# puntos_prueba_1 = [
+#     [-1, 6],
+#     [0, 4],
+#     [2, 1],
+#     [3, 1],
+#     [5, 2],
+#     [6, 5]
+# ]
+
+# print("--- Prueba Grado 2 ---")
+# resultado_1 = regresion_polinomial(puntos_prueba_1, grado=2)
+# for clave, valor in resultado_1.items():
+#     print(f"{clave}: {valor}")
+
+
+# print("\n")
+
+
+# # Prueba grado 4 
+# puntos_prueba_2 = [
+#     [-3.2, 4.8],
+#     [-2.75, -4.05],
+#     [-1, 0],
+#     [0, 3],
+#     [0.5, 2],
+#     [1.5, -1.4],
+#     [2, 0],
+#     [2.33, 4]
+# ]
+
+# print("--- Prueba Grado 4 ---")
+# resultado_2 = regresion_polinomial(puntos_prueba_2, grado=4)
+# for clave, valor in resultado_2.items():
+#     print(f"{clave}: {valor}")
