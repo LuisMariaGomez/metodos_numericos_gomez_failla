@@ -1,17 +1,26 @@
 
 #http://127.0.0.1:8001
 import traceback
+import importlib.util
+from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from fastapi import Body
 from typing import Optional
 from unidad1.metodos_abiertos import resolver_abiertos
 from unidad1.metodos_cerrados import resolver_cerrados
 from unidad2.gauss_jordan import resolver_gauss_jordan
 from unidad2.gauss_seidel import resolver_gauss_seidel
+from unidad3.regresion_lineal import regresion_lineal
+
+BASE_DIR = Path(__file__).resolve().parent
+POLINOMIAL_PATH = BASE_DIR / "unidad 4" / "regresion_polinomial.py"
+spec = importlib.util.spec_from_file_location("regresion_polinomial_mod", POLINOMIAL_PATH)
+regresion_polinomial_mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(regresion_polinomial_mod)
+regresion_polinomial = regresion_polinomial_mod.regresion_polinomial
 
 app = FastAPI()
 
@@ -29,6 +38,11 @@ class datos(BaseModel):
     iteraciones: int
     tolerancia: float
     metodo: str
+
+class DatosRegresion(BaseModel):
+    puntos: list[list[float]]
+    tolerancia: float = 0.8
+    grado: Optional[int] = None
 
 
 @app.exception_handler(Exception)
@@ -51,8 +65,6 @@ def resolver_gauss_jordan_api(
     resultado = resolver_gauss_jordan(matriz, valores_independientes)
     return resultado
 
-from fastapi import Body
-
 @app.post("/resolver_gauss_seidel")
 def resolver_gauss_seidel_api(
     matriz: list[list[float]] = Body(...),
@@ -61,6 +73,37 @@ def resolver_gauss_seidel_api(
     iteraciones: int = Body(100)
 ):
     resultado = resolver_gauss_seidel(matriz,valores_independientes, tolerancia,iteraciones)
+    return resultado
+
+@app.post("/resolver_regresion_lineal")
+def resolver_regresion_lineal_api(datos: DatosRegresion):
+    if len(datos.puntos) < 2:
+        raise HTTPException(status_code=400, detail="Carga al menos 2 puntos")
+
+    resultado = regresion_lineal(datos.puntos, datos.tolerancia)
+    return resultado
+
+@app.post("/resolver_regresion_polinomial")
+def resolver_regresion_polinomial_api(datos: DatosRegresion):
+    if len(datos.puntos) < 2:
+        raise HTTPException(status_code=400, detail="Carga al menos 2 puntos")
+
+    if datos.grado is None:
+        raise HTTPException(
+            status_code=400,
+            detail="El grado es obligatorio para la regresion polinomial"
+        )
+
+    if datos.grado < 1:
+        raise HTTPException(status_code=400, detail="El grado debe ser mayor o igual a 1")
+
+    if datos.grado >= len(datos.puntos):
+        raise HTTPException(
+            status_code=400,
+            detail="El grado debe ser menor que la cantidad de puntos"
+        )
+
+    resultado = regresion_polinomial(datos.puntos, datos.grado, datos.tolerancia)
     return resultado
 
 @app.get("/resolver_abiertos")

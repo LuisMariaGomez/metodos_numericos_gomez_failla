@@ -11,8 +11,17 @@ function seleccionarMetodo(metodo, boton) {
     actualizarVisibilidadEstadoSistema();
 }
 
+function seleccionarRegresion(metodo, boton) {
+    seleccionarMetodo(metodo, boton);
+    const gradoContainer = document.getElementById("grado-container");
+    if (gradoContainer) {
+        gradoContainer.classList.toggle("is-hidden", metodo !== "polinomial");
+    }
+}
+
 function init() {
     if (typeof GGBApplet === "undefined") return; // 👈 clave
+    const graficoId = document.getElementById("grafico-regresion") ? "grafico-regresion" : "grafico";
 
     let params = {
         appName: "graphing",
@@ -25,7 +34,7 @@ function init() {
 
     applet = new GGBApplet(params, true);
     window.applet = applet;
-    applet.inject("grafico");
+    applet.inject(graficoId);
 }
 
 /* METODOS ABIERTOS Y CERRADOS */
@@ -128,12 +137,13 @@ async function graficar_y_calcular() {
     }
 }
 window.onload = () => {
-    if (document.getElementById("grafico")) {
+    if (document.getElementById("grafico") || document.getElementById("grafico-regresion")) {
         init();
     }
 };
 
 document.getElementById("optimizar-btn")?.addEventListener("click", generarMatriz);
+document.getElementById("generar-puntos-btn")?.addEventListener("click", generarPuntosRegresion);
 
 function mostrarResultadoSistema(index, value) {
     const resultElement = document.getElementById(`result-${index}`);
@@ -397,6 +407,195 @@ async function calcular_sistema() {
         }
         if (metodoSeleccionado === "gauss_seidel") {
             mostrarEstadoSistema("No se pudo calcular", false);
+        }
+    }
+}
+
+function generarPuntosRegresion() {
+    const cantidad = parseInt(document.getElementById("cantidad-puntos")?.value);
+    const tabla = document.querySelector(".points-table tbody");
+
+    if (!tabla) return;
+
+    if (!cantidad || cantidad < 2 || cantidad > 12) {
+        alert("Ingresa una cantidad de puntos entre 2 y 12");
+        return;
+    }
+
+    tabla.innerHTML = "";
+
+    for (let i = 0; i < cantidad; i++) {
+        const fila = document.createElement("tr");
+
+        for (const eje of ["x", "y"]) {
+            const celda = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.step = "any";
+            input.placeholder = `${eje}${i + 1}`;
+            celda.appendChild(input);
+            fila.appendChild(celda);
+        }
+
+        tabla.appendChild(fila);
+    }
+}
+
+function obtenerPuntosRegresion() {
+    const filas = document.querySelectorAll(".points-table tbody tr");
+    const puntos = [];
+
+    filas.forEach(fila => {
+        const inputs = fila.querySelectorAll("input");
+        const x = parseFloat(inputs[0]?.value);
+        const y = parseFloat(inputs[1]?.value);
+
+        if (!Number.isNaN(x) && !Number.isNaN(y)) {
+            puntos.push([x, y]);
+        }
+    });
+
+    return puntos;
+}
+
+function mostrarResultadoRegresion(data, metodo) {
+    const funcion = document.getElementById("result-funcion-regresion");
+    const coeficiente = document.getElementById("result-coeficiente-regresion");
+    const ajuste = document.getElementById("result-ajuste-regresion");
+
+    if (!funcion || !coeficiente || !ajuste) return;
+
+    funcion.textContent = data["Función"] || data["Funcion"] || "-";
+    coeficiente.textContent = data["Porcentaje de efectividad"] ||
+        data["Coeficiente de correlación (r)"] ||
+        "-";
+    ajuste.textContent = data["Efectividad de ajuste"] || "-";
+
+    ajuste.classList.remove("status-ok", "status-error");
+    const textoAjuste = ajuste.textContent.toLowerCase();
+    if (textoAjuste.includes("no aceptable")) {
+        ajuste.classList.add("status-error");
+    } else if (textoAjuste.includes("aceptable")) {
+        ajuste.classList.add("status-ok");
+    }
+
+    if (metodo === "lineal" && coeficiente.textContent !== "-") {
+        coeficiente.textContent = `r = ${coeficiente.textContent}`;
+    }
+}
+
+function obtenerExpresionRegresion(funcion) {
+    if (!funcion || !funcion.includes("=")) return "";
+
+    return funcion
+        .split("=")
+        .slice(1)
+        .join("=")
+        .trim()
+        .replace(/(\d)(x)/g, "$1*$2");
+}
+
+function graficarRegresion(puntos, funcion) {
+    if (!window.applet || !window.applet.getAppletObject) return;
+
+    const ggb = window.applet.getAppletObject();
+    if (!ggb) return;
+
+    const expresion = obtenerExpresionRegresion(funcion);
+    if (!expresion) return;
+
+    ggb.reset();
+
+    puntos.forEach((punto, index) => {
+        const [x, y] = punto;
+        const nombre = `P${index + 1}`;
+        ggb.evalCommand(`${nombre} = (${x}, ${y})`);
+        ggb.setColor(nombre, 34, 197, 94);
+        ggb.setPointSize(nombre, 6);
+    });
+
+    ggb.evalCommand(`f(x) = ${expresion}`);
+    ggb.setColor("f", 96, 165, 250);
+    ggb.setLineThickness("f", 5);
+}
+
+async function calcular_regresion() {
+    const tolerancia = parseFloat(document.getElementById("tolerancia-regresion")?.value);
+    const puntos = obtenerPuntosRegresion();
+
+    if (!metodoSeleccionado) {
+        alert("Selecciona un metodo primero");
+        return;
+    }
+
+    if (metodoSeleccionado !== "lineal" && metodoSeleccionado !== "polinomial") {
+        alert("Selecciona un metodo de regresion");
+        return;
+    }
+
+    if (puntos.length < 2) {
+        alert("Carga al menos 2 puntos completos");
+        return;
+    }
+
+    const body = {
+        puntos,
+        tolerancia: Number.isNaN(tolerancia) ? 0.8 : tolerancia
+    };
+
+    let endpoint = "resolver_regresion_lineal";
+
+    if (metodoSeleccionado === "polinomial") {
+        const grado = parseInt(document.getElementById("grado-regresion")?.value);
+
+        if (!grado || grado < 1) {
+            alert("Ingresa un grado mayor o igual a 1");
+            return;
+        }
+
+        if (grado >= puntos.length) {
+            alert("El grado debe ser menor que la cantidad de puntos");
+            return;
+        }
+
+        body.grado = grado;
+        endpoint = "resolver_regresion_polinomial";
+    }
+
+    const url = `http://127.0.0.1:8001/${endpoint}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data?.detail || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        if (typeof data === "string") {
+            throw new Error(data);
+        }
+
+        mostrarResultadoRegresion(data, metodoSeleccionado);
+        graficarRegresion(puntos, data["Función"] || data["Funcion"]);
+    } catch (err) {
+        const funcion = document.getElementById("result-funcion-regresion");
+        const coeficiente = document.getElementById("result-coeficiente-regresion");
+        const ajuste = document.getElementById("result-ajuste-regresion");
+
+        if (funcion) funcion.textContent = "Error al calcular";
+        if (coeficiente) coeficiente.textContent = "-";
+        if (ajuste) {
+            ajuste.textContent = err.message || "No se pudo calcular";
+            ajuste.classList.remove("status-ok");
+            ajuste.classList.add("status-error");
         }
     }
 }

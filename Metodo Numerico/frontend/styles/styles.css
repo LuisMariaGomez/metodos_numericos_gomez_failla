@@ -69,7 +69,8 @@ nav a {
 
 /* encerrar cada sector */
 .card,
-#grafico {
+#grafico,
+#grafico-regresion {
     background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(27, 39, 62, 0.86));
     border: 1px solid rgba(148, 163, 184, 0.22);
     border-radius: 18px;
@@ -93,7 +94,8 @@ nav a {
 
 
 /* para q el grafico ocupe todo */
-#grafico {
+#grafico,
+#grafico-regresion {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -105,7 +107,12 @@ nav a {
 #grafico canvas,
 #grafico > div,
 #grafico .applet_scaler,
-#grafico .applet_scaler > div {
+#grafico .applet_scaler > div,
+#grafico-regresion iframe,
+#grafico-regresion canvas,
+#grafico-regresion > div,
+#grafico-regresion .applet_scaler,
+#grafico-regresion .applet_scaler > div {
     width: 100%;
     height: 100%;
     max-width: 100%;
@@ -199,6 +206,13 @@ button:hover,
     width: 200px;
 }
 
+#calcular-regresion-btn {
+    background: linear-gradient(120deg, var(--success), var(--success-dark));
+    border-color: rgba(34, 197, 94, 0.5);
+    color: #020617;
+    width: 200px;
+}
+
 @media (max-width: 980px) {
     .pantalla_principal {
         grid-template-columns: 1fr;
@@ -217,7 +231,8 @@ button:hover,
     }
 
     .metodo-btn,
-    #graficar-btn {
+    #graficar-btn,
+    #calcular-regresion-btn {
         width: 100%;
     }
 }
@@ -225,11 +240,13 @@ button:hover,
 @media (max-width: 620px) {
     .card,
     .resultados,
-    #grafico {
+    #grafico,
+    #grafico-regresion {
         padding: 1rem;
     }
 
-    #grafico {
+    #grafico,
+    #grafico-regresion {
         min-height: 300px;
     }
 }
@@ -538,4 +555,82 @@ button:hover,
 .optimize-row .metodo-btn {
     width: auto;
     min-width: 50px;
+}
+
+.regresion-layout {
+    grid-template-columns: minmax(360px, 520px) minmax(420px, 620px);
+    max-width: 1240px;
+}
+
+.regresion-card {
+    width: min(560px, 100%);
+}
+
+.regresion-form-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.points-panel {
+    margin-top: 0.75rem;
+    overflow-x: auto;
+}
+
+.points-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.points-table th {
+    color: var(--accent);
+    font-size: 0.95rem;
+    padding: 0 0.35rem 0.4rem;
+    text-align: left;
+}
+
+.points-table td {
+    padding: 0.25rem;
+}
+
+.points-table input {
+    min-width: 120px;
+    text-align: center;
+}
+
+.regresion-metodos-grid {
+    grid-template-columns: repeat(2, minmax(0, 200px));
+}
+
+.regresion-result-card .result-card {
+    width: 100%;
+}
+
+.regresion-panel-derecho {
+    grid-template-rows: minmax(360px, 1fr) auto;
+}
+
+.result-row {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.result-value-large {
+    min-height: 2.8rem;
+    width: 100%;
+    padding: 0.75rem 0.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: #0f172a;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 980px) {
+    .regresion-layout,
+    .regresion-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .regresion-metodos-grid {
+        grid-template-columns: 1fr;
+    }
 }

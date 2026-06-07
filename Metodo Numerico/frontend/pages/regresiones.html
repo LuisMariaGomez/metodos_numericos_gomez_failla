@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Regresiones</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html"><h1>Regresiones</h1></a></li>
+        </ul>
+    </nav>
+
+    <section class="pantalla_principal regresion-layout">
+        <div class="card regresion-card">
+            <h2>Datos</h2>
+
+            <div class="form-grid regresion-form-grid">
+                <div>
+                    <label>Cantidad de puntos</label>
+                    <input id="cantidad-puntos" type="number" min="2" max="12" value="5">
+                </div>
+
+                <div>
+                    <label>Tolerancia</label>
+                    <input id="tolerancia-regresion" type="number" step="0.01" min="0" max="1" value="0.8">
+                </div>
+
+                <div id="grado-container" class="is-hidden">
+                    <label>Grado</label>
+                    <input id="grado-regresion" type="number" min="1" value="2">
+                </div>
+            </div>
+
+            <div class="optimize-row">
+                <button id="generar-puntos-btn" type="button">Generar puntos</button>
+            </div>
+
+            <h3>Puntos</h3>
+            <div class="points-panel">
+                <table class="points-table">
+                    <thead>
+                        <tr>
+                            <th>x</th>
+                            <th>y</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="number" step="any" placeholder="x1"></td>
+                            <td><input type="number" step="any" placeholder="y1"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" step="any" placeholder="x2"></td>
+                            <td><input type="number" step="any" placeholder="y2"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" step="any" placeholder="x3"></td>
+                            <td><input type="number" step="any" placeholder="y3"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" step="any" placeholder="x4"></td>
+                            <td><input type="number" step="any" placeholder="y4"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" step="any" placeholder="x5"></td>
+                            <td><input type="number" step="any" placeholder="y5"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="button-grid">
+                <div class="metodos-grid regresion-metodos-grid">
+                    <button class="metodo-btn" type="button" onclick="seleccionarRegresion('lineal', this)">Lineal</button>
+                    <button class="metodo-btn" type="button" onclick="seleccionarRegresion('polinomial', this)">Polinomial</button>
+                </div>
+                <button id="calcular-regresion-btn" type="button" onclick="calcular_regresion()">Calcular</button>
+            </div>
+        </div>
+
+        <div class="panel-derecho regresion-panel-derecho">
+            <div id="grafico-regresion"></div>
+
+            <div class="result card regresion-result-card">
+                <div class="result-card">
+                    <h2>Resultados</h2>
+                    <div class="result-row">
+                        <label>Funcion</label>
+                        <span class="result-value-large" id="result-funcion-regresion"></span>
+                    </div>
+                    <div class="result-row">
+                        <label>Coeficiente</label>
+                        <span class="result-value-large" id="result-coeficiente-regresion"></span>
+                    </div>
+                    <div class="result-row">
+                        <label>Ajuste</label>
+                        <span class="result-value-large result-status" id="result-ajuste-regresion"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>
