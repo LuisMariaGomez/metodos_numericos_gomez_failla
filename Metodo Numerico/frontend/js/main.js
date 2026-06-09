@@ -609,8 +609,13 @@ async function calcular_regresion() {
 function obtenerExpresionGeogebra(funcion) {
     return funcion
         .trim()
+        .replace(/\s+/g, "")
         .replace(/\*\*/g, "^")
-        .replace(/(\d)(x)/g, "$1*$2");
+        .replace(/([\d)])x/g, "$1*x")
+        .replace(/x([\d(])/g, "x*$1")
+        .replace(/\)\(/g, ")*(")
+        .replace(/\)([a-zA-Z])/g, ")*$1")
+        .replace(/\bx\(/g, "x*(");
 }
 
 function graficarIntegracion(funcion, xi, xd) {

@@ -1,7 +1,19 @@
 import math
+import re
+
+def normalizar_funcion(funcion_str):
+    funcion_str = funcion_str.replace('^', '**')
+    funcion_str = re.sub(r'\s+', '', funcion_str)
+    funcion_str = re.sub(r'(\d)\(', r'\1*(', funcion_str)
+    funcion_str = re.sub(r'\)(\d)', r')*\1', funcion_str)
+    funcion_str = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', funcion_str)
+    funcion_str = re.sub(r'([a-zA-Z])(\d)', r'\1*\2', funcion_str)
+    funcion_str = re.sub(r'\)([a-zA-Z])', r')*\1', funcion_str)
+    funcion_str = re.sub(r'\bx\(', 'x*(', funcion_str)
+    return funcion_str
 
 def evaluar_funcion(funcion_str, valor_x):
-    funcion_str = funcion_str.replace('^', '**')
+    funcion_str = normalizar_funcion(funcion_str)
 
     entorno = {"x": valor_x}
     entorno.update(math.__dict__)

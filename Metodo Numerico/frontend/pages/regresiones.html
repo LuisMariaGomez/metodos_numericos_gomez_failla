@@ -14,75 +14,109 @@
     </nav>
 
     <section class="pantalla_principal regresion-layout">
-        <div class="card regresion-card">
-            <h2>Datos</h2>
+        <div class="regresion-left-panel">
+            <div class="card regresion-card">
+                <h2>Datos</h2>
 
-            <div class="form-grid regresion-form-grid">
-                <div>
-                    <label>Cantidad de puntos</label>
-                    <input id="cantidad-puntos" type="number" min="2" max="12" value="5">
+                <div class="form-grid regresion-form-grid">
+                    <div>
+                        <label>Cantidad de puntos</label>
+                        <input id="cantidad-puntos" type="number" min="2" max="14" value="5">
+                    </div>
+
+                    <div>
+                        <label>Tolerancia</label>
+                        <input id="tolerancia-regresion" type="number" step="0.01" min="0" max="1" value="0.8">
+                    </div>
+
+                    <div id="grado-container" class="is-hidden">
+                        <label>Grado</label>
+                        <input id="grado-regresion" type="number" min="1" value="2">
+                    </div>
                 </div>
 
-                <div>
-                    <label>Tolerancia</label>
-                    <input id="tolerancia-regresion" type="number" step="0.01" min="0" max="1" value="0.8">
+                <div class="optimize-row">
+                    <button id="generar-puntos-btn" type="button">Generar puntos</button>
                 </div>
 
-                <div id="grado-container" class="is-hidden">
-                    <label>Grado</label>
-                    <input id="grado-regresion" type="number" min="1" value="2">
+                <h3>Puntos</h3>
+                <div class="points-panel">
+                    <table class="points-table">
+                        <thead>
+                            <tr>
+                                <th>x</th>
+                                <th>y</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x1"></td>
+                                <td><input type="number" step="any" placeholder="y1"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x2"></td>
+                                <td><input type="number" step="any" placeholder="y2"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x3"></td>
+                                <td><input type="number" step="any" placeholder="y3"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x4"></td>
+                                <td><input type="number" step="any" placeholder="y4"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x5"></td>
+                                <td><input type="number" step="any" placeholder="y5"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x6"></td>
+                                <td><input type="number" step="any" placeholder="y6"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x7"></td>
+                                <td><input type="number" step="any" placeholder="y7"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x8"></td>
+                                <td><input type="number" step="any" placeholder="y8"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x9"></td>
+                                <td><input type="number" step="any" placeholder="y9"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x10"></td>
+                                <td><input type="number" step="any" placeholder="y10"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x11"></td>
+                                <td><input type="number" step="any" placeholder="y11"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x12"></td>
+                                <td><input type="number" step="any" placeholder="y12"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x13"></td>
+                                <td><input type="number" step="any" placeholder="y13"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" step="any" placeholder="x14"></td>
+                                <td><input type="number" step="any" placeholder="y14"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="button-grid">
+                    <div class="metodos-grid regresion-metodos-grid">
+                        <button class="metodo-btn" type="button" onclick="seleccionarRegresion('lineal', this)">Lineal</button>
+                        <button class="metodo-btn" type="button" onclick="seleccionarRegresion('polinomial', this)">Polinomial</button>
+                    </div>
+                    <button id="calcular-regresion-btn" type="button" onclick="calcular_regresion()">Calcular</button>
                 </div>
             </div>
-
-            <div class="optimize-row">
-                <button id="generar-puntos-btn" type="button">Generar puntos</button>
-            </div>
-
-            <h3>Puntos</h3>
-            <div class="points-panel">
-                <table class="points-table">
-                    <thead>
-                        <tr>
-                            <th>x</th>
-                            <th>y</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="number" step="any" placeholder="x1"></td>
-                            <td><input type="number" step="any" placeholder="y1"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" step="any" placeholder="x2"></td>
-                            <td><input type="number" step="any" placeholder="y2"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" step="any" placeholder="x3"></td>
-                            <td><input type="number" step="any" placeholder="y3"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" step="any" placeholder="x4"></td>
-                            <td><input type="number" step="any" placeholder="y4"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" step="any" placeholder="x5"></td>
-                            <td><input type="number" step="any" placeholder="y5"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="button-grid">
-                <div class="metodos-grid regresion-metodos-grid">
-                    <button class="metodo-btn" type="button" onclick="seleccionarRegresion('lineal', this)">Lineal</button>
-                    <button class="metodo-btn" type="button" onclick="seleccionarRegresion('polinomial', this)">Polinomial</button>
-                </div>
-                <button id="calcular-regresion-btn" type="button" onclick="calcular_regresion()">Calcular</button>
-            </div>
-        </div>
-
-        <div class="panel-derecho regresion-panel-derecho">
-            <div id="grafico-regresion"></div>
 
             <div class="result card regresion-result-card">
                 <div class="result-card">
@@ -101,6 +135,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="regresion-right-panel">
+            <div id="grafico-regresion"></div>
         </div>
     </section>
 
