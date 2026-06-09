@@ -22,7 +22,16 @@
                     <label for="funcion-integracion">F(x):</label>
                     <input id="funcion-integracion" placeholder="ej: x^2 + 3*x">
                 </div>
+                
+                <div class="integracion-row">
+                    <label for="enable-funcion-2">Agregar segunda función:</label>
+                    <input id="enable-funcion-2" type="checkbox" onchange="toggleFuncion2(this.checked)">
+                </div>
 
+                <div class="integracion-row" id="wrapper-funcion2" style="display: none;">
+                    <label for="funcion2-integracion">G(x):</label>
+                    <input id="funcion2-integracion" placeholder="ej: ln(x) o e^x">
+                </div>
                 <div class="integracion-row integracion-limits">
                     <div>
                         <label for="xi-integracion">Xi:</label>

@@ -4,6 +4,7 @@ import re
 def normalizar_funcion(funcion_str):
     funcion_str = funcion_str.replace('^', '**')
     funcion_str = re.sub(r'\s+', '', funcion_str)
+    funcion_str = funcion_str.replace('ln(', 'log(')
     funcion_str = re.sub(r'(\d)\(', r'\1*(', funcion_str)
     funcion_str = re.sub(r'\)(\d)', r')*\1', funcion_str)
     funcion_str = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', funcion_str)
@@ -17,6 +18,7 @@ def evaluar_funcion(funcion_str, valor_x):
 
     entorno = {"x": valor_x}
     entorno.update(math.__dict__)
+    entorno['ln'] = math.log
     
     try:
         return eval(funcion_str, entorno)

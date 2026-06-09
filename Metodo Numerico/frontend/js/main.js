@@ -610,6 +610,7 @@ function obtenerExpresionGeogebra(funcion) {
     return funcion
         .trim()
         .replace(/\s+/g, "")
+        .replace(/ln\(/g, "log(")
         .replace(/\*\*/g, "^")
         .replace(/([\d)])x/g, "$1*x")
         .replace(/x([\d(])/g, "x*$1")
@@ -617,31 +618,56 @@ function obtenerExpresionGeogebra(funcion) {
         .replace(/\)([a-zA-Z])/g, ")*$1")
         .replace(/\bx\(/g, "x*(");
 }
+    function toggleFuncion2(checked) {
+        const wrapper = document.getElementById("wrapper-funcion2");
+        if (!wrapper) return;
+        wrapper.style.display = checked ? "block" : "none";
+    }
 
-function graficarIntegracion(funcion, xi, xd) {
-    if (!window.applet || !window.applet.getAppletObject) return;
+    function graficarIntegracion(funcion1, xi, xd, funcion2) {
+        if (!window.applet || !window.applet.getAppletObject) return;
 
-    const ggb = window.applet.getAppletObject();
-    if (!ggb) return;
+        const ggb = window.applet.getAppletObject();
+        if (!ggb) return;
 
-    const expresion = obtenerExpresionGeogebra(funcion);
+        const expr1 = obtenerExpresionGeogebra(funcion1);
 
-    ggb.reset();
-    ggb.evalCommand(`f(x) = ${expresion}`);
-    ggb.setColor("f", 96, 165, 250);
-    ggb.setLineThickness("f", 5);
+        ggb.reset();
+        ggb.evalCommand(`f(x) = ${expr1}`);
+        ggb.setColor("f", 96, 165, 250);
+        ggb.setLineThickness("f", 5);
 
-    ggb.evalCommand(`A = (${xi}, 0)`);
-    ggb.evalCommand(`B = (${xd}, 0)`);
-    ggb.evalCommand(`area = Integral(f, ${xi}, ${xd})`);
+        if (funcion2) {
+            const expr2 = obtenerExpresionGeogebra(funcion2);
+            ggb.evalCommand(`g(x) = ${expr2}`);
+            ggb.setColor("g", 239, 68, 68);
+            ggb.setLineThickness("g", 4);
 
-    ggb.setColor("A", 34, 197, 94);
-    ggb.setColor("B", 34, 197, 94);
-    ggb.setPointSize("A", 6);
-    ggb.setPointSize("B", 6);
-    ggb.setColor("area", 34, 197, 94);
-    ggb.setFilling("area", 0.35);
-}
+            ggb.evalCommand(`h(x) = f(x) - g(x)`);
+
+            ggb.evalCommand(`A = (${xi}, 0)`);
+            ggb.evalCommand(`B = (${xd}, 0)`);
+            ggb.evalCommand(`area = Integral(h, ${xi}, ${xd})`);
+
+            ggb.setColor("A", 34, 197, 94);
+            ggb.setColor("B", 34, 197, 94);
+            ggb.setPointSize("A", 6);
+            ggb.setPointSize("B", 6);
+            ggb.setColor("area", 34, 197, 94);
+            ggb.setFilling("area", 0.35);
+        } else {
+            ggb.evalCommand(`A = (${xi}, 0)`);
+            ggb.evalCommand(`B = (${xd}, 0)`);
+            ggb.evalCommand(`area = Integral(f, ${xi}, ${xd})`);
+
+            ggb.setColor("A", 34, 197, 94);
+            ggb.setColor("B", 34, 197, 94);
+            ggb.setPointSize("A", 6);
+            ggb.setPointSize("B", 6);
+            ggb.setColor("area", 34, 197, 94);
+            ggb.setFilling("area", 0.35);
+        }
+    }
 
 function metodoIntegracionRequiereN(metodo) {
     return ["trapecios_multiple", "simpson_1_3_multiple", "simpson_combinado"].includes(metodo);
@@ -649,6 +675,8 @@ function metodoIntegracionRequiereN(metodo) {
 
 async function calcular_integracion() {
     const funcion = document.getElementById("funcion-integracion")?.value.trim();
+    const usarFuncion2 = document.getElementById("enable-funcion-2")?.checked;
+    const funcion2 = document.getElementById("funcion2-integracion")?.value.trim();
     const xi = parseFloat(document.getElementById("xi-integracion")?.value);
     const xd = parseFloat(document.getElementById("xd-integracion")?.value);
     const n = parseInt(document.getElementById("n-integracion")?.value);
@@ -657,6 +685,11 @@ async function calcular_integracion() {
 
     if (!funcion || Number.isNaN(xi) || Number.isNaN(xd) || !metodo) {
         alert("Completa funcion, Xi, Xd y metodo");
+        return;
+    }
+
+    if (usarFuncion2 && !funcion2) {
+        alert("Activa y completa la segunda función o desactiva la opción");
         return;
     }
 
@@ -670,7 +703,9 @@ async function calcular_integracion() {
         return;
     }
 
-    const body = { funcion, xi, xd, metodo };
+    // si hay segunda funcion, se compone la funcion que integra f-g
+    const funcionEnvio = usarFuncion2 ? `(${funcion})-(${funcion2})` : funcion;
+    const body = { funcion: funcionEnvio, xi, xd, metodo };
     if (!Number.isNaN(n)) {
         body.n = n;
     }
@@ -691,12 +726,12 @@ async function calcular_integracion() {
         }
 
         if (areaElement) {
-            areaElement.textContent = Number(data.area).toFixed(6);
+            areaElement.textContent = Math.abs(Number(data.area)).toFixed(6);
             areaElement.classList.remove("status-error");
             areaElement.classList.add("status-ok");
         }
 
-        graficarIntegracion(funcion, xi, xd);
+        graficarIntegracion(funcion, xi, xd, usarFuncion2 ? funcion2 : null);
     } catch (err) {
         if (areaElement) {
             areaElement.textContent = err.message || "No se pudo calcular";
